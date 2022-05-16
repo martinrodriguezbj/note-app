@@ -34,7 +34,7 @@ app.use(session({
 
  // Routes
  app.use(require('./routes/index'))
- app.use(require('./routes/note'))
+ app.use(require('./routes/notes'))
  app.use(require('./routes/users'))
 
  // Static files - para configurar donde estara la carpeta de archivos estaticos
