@@ -51,12 +51,14 @@ router.get('/users/miperfil', async (req, res) => {
 
 router.get('/users/miperfil/edit/:id', isAuthenticated, async (req, res) => {
     const usuari = await User.findById(req.params.id).lean();
+    console.log(req.params.id);
     res.render('users/edit', {usuari});
 })
 
 router.put('/users/miperfil/edit/:id', isAuthenticated, async (req, res) => {
     const { name, email }= req.body;
-    await User.findByIdAndUpdate(req.params.id, {name, email });
+    const us = await User.findByIdAndUpdate(req.params.id, {name, email });
+    //console.log({name});
     req.flash('succes_msg', 'Datos actualizados correctamente');
     res.redirect('/users/miperfil');
 })
