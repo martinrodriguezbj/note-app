@@ -4,10 +4,12 @@ const router = express.Router();
 
 const Note = require('../models/Note');
 const { isAuthenticated } = require('../helpers/auth');
+const User = require('../models/User');
 
 router.get('/notes/add', isAuthenticated, (req, res) => {
     res.render('notes/new-notes')
 });
+
 
 router.post('/notes/new-notes', isAuthenticated, async (req, res) => {
     const { title, description }= req.body  ;
@@ -38,6 +40,29 @@ router.get('/notes', isAuthenticated, async (req, res) => {
     const notes = await Note.find({user: req.user.id}).lean().sort({date: 'desc'});
     res.render('notes/all-notes', { notes });
 });
+
+//editado por mi
+router.get('/users/miperfil', async (req, res) => {
+    const usuarios = await User.find({email: req.user.email}).lean();
+    //console.log(usuarios);
+    res.render('users/miperfil', {usuarios});
+});
+
+
+router.get('/users/miperfil/edit/:id', isAuthenticated, async (req, res) => {
+    const usuari = await User.findById(req.params.id).lean();
+    res.render('users/edit', {usuari});
+})
+
+router.put('/users/miperfil/edit/:id', isAuthenticated, async (req, res) => {
+    const { name, email }= req.body;
+    await User.findByIdAndUpdate(req.params.id, {name, email });
+    req.flash('succes_msg', 'Datos actualizados correctamente');
+    res.redirect('/users/miperfil');
+})
+//hasta acá
+
+
 
 router.get('/notes/edit/:id', isAuthenticated, async (req, res) => {
     const note = await Note.findById(req.params.id).lean();
